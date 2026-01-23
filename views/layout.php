@@ -94,7 +94,7 @@
 
             <ul class=" list-unstyled components">
                         <li class="<?php echo ($page == 'dashboard') ? 'active' : ''; ?>">
-                            <a href="index.php?page=dashboard">Dashboard</a>
+                            <a href="index.php?page=dashboard">Tổng quan</a>
                         </li>
                         <li class="<?php echo ($page == 'members' || $page == 'add_member') ? 'active' : ''; ?>">
                             <a href="index.php?page=members">Hội viên</a>
@@ -122,7 +122,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 border d-md-none">
                 <div class="container-fluid">
                     <button type="button" id="sidebarCollapse" class="btn btn-dark">
-                        <span>Menu</span>
+                        <span>Danh mục</span>
                     </button>
                 </div>
             </nav>

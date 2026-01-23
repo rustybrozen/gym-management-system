@@ -25,6 +25,10 @@ class SubscriptionController
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+                echo "Lỗi bảo mật CSRF!";
+                exit;
+            }
             $memberId = $_POST['member_id'];
             $packageId = $_POST['package_id'];
 
@@ -44,6 +48,11 @@ class SubscriptionController
 
         $members = $this->memberModel->getAll();
         $packages = $this->packageModel->getAll();
+
+        $selected_member = null;
+        if (isset($_GET['member_id'])) {
+            $selected_member = $this->memberModel->getById($_GET['member_id']);
+        }
 
         $content = 'views/subscriptions/create.php';
         include 'views/layout.php';

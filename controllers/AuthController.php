@@ -15,19 +15,23 @@ class AuthController
     {
         $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-
-            $user = $this->adminModel->login($username, $password);
-
-            if ($user) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['full_name'] = $user['full_name'];
-                header("Location: index.php");
-                exit;
+            if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+                $error = "Lỗi bảo mật CSRF!";
             } else {
-                $error = "Tên đăng nhập hoặc mật khẩu không đúng!";
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+
+                $user = $this->adminModel->login($username, $password);
+
+                if ($user) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['full_name'] = $user['full_name'];
+                    header("Location: index.php");
+                    exit;
+                } else {
+                    $error = "Tên đăng nhập hoặc mật khẩu không đúng!";
+                }
             }
         }
 

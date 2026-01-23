@@ -19,7 +19,7 @@ class Admin
 
         $user = $stmt->fetch();
 
-        if ($user && $user['password'] === $password) {
+        if ($user && password_verify($password, $user['password'])) {
             return $user;
         }
         return false;
@@ -47,8 +47,10 @@ class Admin
         $query = "INSERT INTO " . $this->table . " (username, password, full_name) VALUES (:username, :password, :full_name)";
         $stmt = $this->conn->prepare($query);
 
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':password', $hashed_password);
         $stmt->bindParam(':full_name', $fullName);
 
         try {
@@ -76,7 +78,8 @@ class Admin
         $stmt->bindParam(':full_name', $fullName);
 
         if (!empty($password)) {
-            $stmt->bindParam(':password', $password);
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt->bindParam(':password', $hashed_password);
         }
 
         try {

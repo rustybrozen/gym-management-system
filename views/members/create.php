@@ -5,6 +5,7 @@
 <?php endif; ?>
 
 <form action="index.php?page=add_member" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="full_name" class="form-label">Họ và tên <span class="text-danger">*</span></label>

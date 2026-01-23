@@ -5,6 +5,7 @@
 <?php endif; ?>
 
 <form action="index.php?page=edit_admin&id=<?php echo $admin['id']; ?>" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
     <div class="mb-3">
         <label for="username" class="form-label">Tên đăng nhập (Username)</label>
         <input type="text" class="form-control" id="username" name="username"

@@ -9,6 +9,7 @@ require_once 'controllers/PackageController.php';
 require_once 'controllers/SubscriptionController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/AdminController.php';
+require_once 'utils/Csrf.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -52,6 +53,21 @@ switch ($page) {
         $controller->create();
         break;
 
+    case 'edit_member':
+        $controller = new MemberController($db);
+        $controller->edit();
+        break;
+
+    case 'delete_member':
+        $controller = new MemberController($db);
+        $controller->delete();
+        break;
+
+    case 'api_members_search':
+        $controller = new MemberController($db);
+        $controller->searchApi();
+        break;
+
     case 'packages':
         $controller = new PackageController($db);
         $controller->index();
@@ -60,6 +76,16 @@ switch ($page) {
     case 'add_package':
         $controller = new PackageController($db);
         $controller->create();
+        break;
+
+    case 'edit_package':
+        $controller = new PackageController($db);
+        $controller->edit();
+        break;
+
+    case 'delete_package':
+        $controller = new PackageController($db);
+        $controller->delete();
         break;
 
     case 'subscriptions':

@@ -41,6 +41,7 @@
         <?php endif; ?>
 
         <form action="index.php?page=login" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
             <div class="mb-3">
                 <label for="username" class="form-label">Tài khoản</label>
                 <input type="text" class="form-control" id="username" name="username" required>

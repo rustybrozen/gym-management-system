@@ -27,15 +27,19 @@ class AdminController
     {
         $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $fullName = $_POST['full_name'];
-
-            if ($this->adminModel->create($username, $password, $fullName)) {
-                header("Location: index.php?page=admins");
-                exit;
+            if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+                $error = "Lỗi bảo mật CSRF!";
             } else {
-                $error = "Tên đăng nhập đã tồn tại hoặc có lỗi xảy ra.";
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $fullName = $_POST['full_name'];
+
+                if ($this->adminModel->create($username, $password, $fullName)) {
+                    header("Location: index.php?page=admins");
+                    exit;
+                } else {
+                    $error = "Tên đăng nhập đã tồn tại hoặc có lỗi xảy ra.";
+                }
             }
         }
         $content = 'views/admins/create.php';
@@ -58,15 +62,19 @@ class AdminController
 
         $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $fullName = $_POST['full_name'];
-
-            if ($this->adminModel->update($id, $username, $password, $fullName)) {
-                header("Location: index.php?page=admins");
-                exit;
+            if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+                $error = "Lỗi bảo mật CSRF!";
             } else {
-                $error = "Có lỗi xảy ra cập nhật.";
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $fullName = $_POST['full_name'];
+
+                if ($this->adminModel->update($id, $username, $password, $fullName)) {
+                    header("Location: index.php?page=admins");
+                    exit;
+                } else {
+                    $error = "Có lỗi xảy ra cập nhật.";
+                }
             }
         }
 

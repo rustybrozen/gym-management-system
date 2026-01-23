@@ -1,4 +1,4 @@
-<h2 class="mb-4">Dashboard</h2>
+<h2 class="mb-4">Tổng quan</h2>
 
 <div class="row">
     <div class="col-md-4">

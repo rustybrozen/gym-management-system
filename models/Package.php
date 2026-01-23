@@ -41,5 +41,43 @@ class Package
         }
         return false;
     }
+
+    public function update($id, $package_name, $duration_days, $price)
+    {
+        $query = "UPDATE " . $this->table . " SET package_name = :name, duration_days = :days, price = :price WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':name', $package_name);
+        $stmt->bindParam(':days', $duration_days);
+        $stmt->bindParam(':price', $price);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function delete($id)
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isUsedInSubscriptions($id)
+    {
+        $query = "SELECT COUNT(*) as count FROM subscriptions WHERE package_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['count'] > 0;
+    }
 }
 ?>

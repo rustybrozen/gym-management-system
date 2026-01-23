@@ -63,15 +63,40 @@ class Member
         return false;
     }
 
-    public function update($id, $full_name, $phone_number, $address)
+    public function update($id, $full_name, $phone_number, $gender, $birth_date, $address, $health_notes)
     {
-        $query = "UPDATE " . $this->table . " SET full_name = :full_name, phone_number = :phone_number, address = :address WHERE id = :id";
+        $query = "UPDATE " . $this->table . " 
+                  SET full_name = :full_name, phone_number = :phone_number, 
+                      gender = :gender, birth_date = :birth_date, 
+                      address = :address, health_notes = :health_notes 
+                  WHERE id = :id";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':full_name', $full_name);
         $stmt->bindParam(':phone_number', $phone_number);
+        $stmt->bindParam(':gender', $gender);
+        $stmt->bindParam(':birth_date', $birth_date);
         $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':health_notes', $health_notes);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function delete($id)
+    {
+        // First delete subscriptions to avoid foreign key constraint failure if CASCADE isn't set
+        $querySub = "DELETE FROM subscriptions WHERE member_id = ?";
+        $stmtSub = $this->conn->prepare($querySub);
+        $stmtSub->bindParam(1, $id);
+        $stmtSub->execute();
+
+        $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $id);
 
         if ($stmt->execute()) {
             return true;

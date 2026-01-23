@@ -65,11 +65,15 @@ class Database
                 FOREIGN KEY (member_id) REFERENCES members(id),
                 FOREIGN KEY (package_id) REFERENCES packages(id)
             );
-            
-            INSERT OR IGNORE INTO admins (id, username, password, full_name) VALUES (1, 'admin', '123456', 'System Admin');
             ";
 
             $this->conn->exec($sql);
+
+            $password = password_hash('123456', PASSWORD_DEFAULT);
+            $sql_insert = "INSERT OR IGNORE INTO admins (id, username, password, full_name) VALUES (1, 'admin', '$password', 'System Admin')";
+            $this->conn->exec($sql_insert);
+
+
         }
     }
 }

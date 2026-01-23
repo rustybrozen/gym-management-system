@@ -2,7 +2,7 @@
 
 class Database
 {
-    private $db_file = __DIR__ . '/../database.sqlite';
+    private $db_file = __DIR__ . '/../db/database.sqlite';
     public $conn;
 
     public function getConnection()

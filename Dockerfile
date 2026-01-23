@@ -23,3 +23,4 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Mở port 80 (Apache mặc định chạy port này)
 EXPOSE 80
+CMD ["sh", "-c", "mkdir -p /var/www/html/db && chown -R www-data:www-data /var/www/html/db && chmod -R 775 /var/www/html/db && apache2-foreground"]

@@ -96,6 +96,9 @@
                         <li class="<?php echo ($page == 'dashboard') ? 'active' : ''; ?>">
                             <a href="index.php?page=dashboard">Tổng quan</a>
                         </li>
+                        <li class="<?php echo ($page == 'checkin') ? 'active' : ''; ?>">
+                            <a href="index.php?page=checkin">Check-in</a>
+                        </li>
                         <li class="<?php echo ($page == 'members' || $page == 'add_member') ? 'active' : ''; ?>">
                             <a href="index.php?page=members">Hội viên</a>
                         </li>
@@ -112,9 +115,7 @@
                             </li>
                         <?php endif; ?>
 
-                        <li class="<?php echo ($page == 'checkin') ? 'active' : ''; ?>">
-                            <a href="index.php?page=checkin">Check-in</a>
-                        </li>
+
 
                         <li class="mt-5 border-top pt-2">
                             <a href="index.php?page=logout" class="text-danger">Đăng xuất</a>

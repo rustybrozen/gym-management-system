@@ -1,6 +1,8 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Danh sách gói tập</h2>
-    <a href="index.php?page=add_package" class="btn btn-primary">Thêm gói tập</a>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+        <a href="index.php?page=add_package" class="btn btn-primary">Thêm gói tập</a>
+    <?php endif; ?>
 </div>
 
 <table class="table table-bordered table-hover">
@@ -22,14 +24,18 @@
                 <td><?php echo number_format($pkg['price']); ?></td>
                 <td>
                     <div class="d-flex gap-1">
-                        <a href="index.php?page=edit_package&id=<?php echo $pkg['id']; ?>"
-                            class="btn btn-sm btn-warning">Sửa</a>
-                        <form action="index.php?page=delete_package" method="POST"
-                            onsubmit="return confirm('Bạn có chắc muốn xóa gói tập này?');" style="display:inline;">
-                            <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
-                            <input type="hidden" name="id" value="<?php echo $pkg['id']; ?>">
-                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                        </form>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <a href="index.php?page=edit_package&id=<?php echo $pkg['id']; ?>"
+                                class="btn btn-sm btn-warning">Sửa</a>
+                            <form action="index.php?page=delete_package" method="POST"
+                                onsubmit="return confirm('Bạn có chắc muốn xóa gói tập này?');" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
+                                <input type="hidden" name="id" value="<?php echo $pkg['id']; ?>">
+                                <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                            </form>
+                        <?php else: ?>
+                            <span class="text-muted">Chỉ xem</span>
+                        <?php endif; ?>
                     </div>
                 </td>
             </tr>

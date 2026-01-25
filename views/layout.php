@@ -105,12 +105,16 @@
                         <li class="<?php echo ($page == 'subscriptions') ? 'active' : ''; ?>">
                             <a href="index.php?page=subscriptions">Đăng ký</a>
                         </li>
-                        <?php if (isset($_SESSION['username']) && $_SESSION['username'] === 'admin'): ?>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                             <li
                                 class="<?php echo ($page == 'admins' || $page == 'add_admin' || $page == 'edit_admin') ? 'active' : ''; ?>">
                                 <a href="index.php?page=admins">Quản lý Admin</a>
                             </li>
                         <?php endif; ?>
+
+                        <li class="<?php echo ($page == 'checkin') ? 'active' : ''; ?>">
+                            <a href="index.php?page=checkin">Check-in</a>
+                        </li>
 
                         <li class="mt-5 border-top pt-2">
                             <a href="index.php?page=logout" class="text-danger">Đăng xuất</a>

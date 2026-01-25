@@ -34,6 +34,7 @@ class Database
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 full_name TEXT,
+                role TEXT DEFAULT 'staff',
                 is_active INTEGER DEFAULT 1
             );
             
@@ -69,11 +70,18 @@ class Database
 
             $this->conn->exec($sql);
 
+            // Check if role column exists in admins table
+            $checkColumn = $this->conn->query("PRAGMA table_info(admins)");
+            $columns = $checkColumn->fetchAll(PDO::FETCH_COLUMN, 1);
+            if (!in_array('role', $columns)) {
+                $this->conn->exec("ALTER TABLE admins ADD COLUMN role TEXT DEFAULT 'staff'");
+                // Update existing admin to be admin role
+                $this->conn->exec("UPDATE admins SET role = 'admin' WHERE username = 'admin'");
+            }
+
             $password = password_hash('123456', PASSWORD_DEFAULT);
-            $sql_insert = "INSERT OR IGNORE INTO admins (id, username, password, full_name) VALUES (1, 'admin', '$password', 'System Admin')";
+            $sql_insert = "INSERT OR IGNORE INTO admins (id, username, password, full_name, role) VALUES (1, 'admin', '$password', 'System Admin', 'admin')";
             $this->conn->exec($sql_insert);
-
-
         }
     }
 }

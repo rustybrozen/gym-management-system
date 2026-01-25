@@ -9,7 +9,7 @@ class AdminController
     public function __construct($db)
     {
 
-        if (!isset($_SESSION['username']) || $_SESSION['username'] !== 'admin') {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             header("Location: index.php?page=dashboard");
             exit;
         }
@@ -33,8 +33,9 @@ class AdminController
                 $username = $_POST['username'];
                 $password = $_POST['password'];
                 $fullName = $_POST['full_name'];
+                $role = $_POST['role'] ?? 'staff';
 
-                if ($this->adminModel->create($username, $password, $fullName)) {
+                if ($this->adminModel->create($username, $password, $fullName, $role)) {
                     header("Location: index.php?page=admins");
                     exit;
                 } else {
@@ -54,11 +55,21 @@ class AdminController
             exit;
         }
 
+        // Prevent editing self
+        if ($id == $_SESSION['user_id']) {
+            echo "<script>alert('Bạn không thể chỉnh sửa tài khoản đang đăng nhập!'); window.location.href='index.php?page=admins';</script>";
+            exit;
+        }
+
         $admin = $this->adminModel->getById($id);
         if (!$admin) {
             header("Location: index.php?page=admins");
             exit;
         }
+
+        // Prevent editing super admin role if we are not strict enough, but here "except for username admin"
+        // We will allow editing other fields but handle role specially? 
+        // User request: "edit the role (except for username admin)" implies 'admin' user role cannot be changed (it's always admin).
 
         $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -68,8 +79,13 @@ class AdminController
                 $username = $_POST['username'];
                 $password = $_POST['password'];
                 $fullName = $_POST['full_name'];
+                $role = $_POST['role'] ?? 'staff';
 
-                if ($this->adminModel->update($id, $username, $password, $fullName)) {
+                if ($admin['username'] === 'admin') {
+                    $role = 'admin'; // Force role to admin if editing super user
+                }
+
+                if ($this->adminModel->update($id, $username, $password, $fullName, $role)) {
                     header("Location: index.php?page=admins");
                     exit;
                 } else {
@@ -87,6 +103,12 @@ class AdminController
         $id = isset($_GET['id']) ? $_GET['id'] : null;
 
         if ($id) {
+            // Prevent deleting self
+            if ($id == $_SESSION['user_id']) {
+                echo "<script>alert('Bạn không thể xóa tài khoản đang đăng nhập!'); window.location.href='index.php?page=admins';</script>";
+                exit;
+            }
+
             $admin = $this->adminModel->getById($id);
 
             if ($admin && $admin['username'] !== 'admin') {

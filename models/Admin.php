@@ -42,9 +42,9 @@ class Admin
         return $stmt->fetch();
     }
 
-    public function create($username, $password, $fullName)
+    public function create($username, $password, $fullName, $role = 'staff')
     {
-        $query = "INSERT INTO " . $this->table . " (username, password, full_name) VALUES (:username, :password, :full_name)";
+        $query = "INSERT INTO " . $this->table . " (username, password, full_name, role) VALUES (:username, :password, :full_name, :role)";
         $stmt = $this->conn->prepare($query);
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -52,6 +52,7 @@ class Admin
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $hashed_password);
         $stmt->bindParam(':full_name', $fullName);
+        $stmt->bindParam(':role', $role);
 
         try {
             if ($stmt->execute()) {
@@ -63,12 +64,12 @@ class Admin
         return false;
     }
 
-    public function update($id, $username, $password, $fullName)
+    public function update($id, $username, $password, $fullName, $role)
     {
         if (!empty($password)) {
-            $query = "UPDATE " . $this->table . " SET username = :username, password = :password, full_name = :full_name WHERE id = :id";
+            $query = "UPDATE " . $this->table . " SET username = :username, password = :password, full_name = :full_name, role = :role WHERE id = :id";
         } else {
-            $query = "UPDATE " . $this->table . " SET username = :username, full_name = :full_name WHERE id = :id";
+            $query = "UPDATE " . $this->table . " SET username = :username, full_name = :full_name, role = :role WHERE id = :id";
         }
 
         $stmt = $this->conn->prepare($query);
@@ -76,6 +77,7 @@ class Admin
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':full_name', $fullName);
+        $stmt->bindParam(':role', $role);
 
         if (!empty($password)) {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);

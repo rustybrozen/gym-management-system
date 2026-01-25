@@ -113,6 +113,12 @@ switch ($page) {
         $controller->delete();
         break;
 
+    case 'checkin':
+        require_once 'controllers/CheckInController.php';
+        $controller = new CheckInController($db);
+        $controller->index();
+        break;
+
     default:
         $controller = new DashboardController($db);
         $controller->index();

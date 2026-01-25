@@ -20,6 +20,11 @@ class PackageController
 
     public function create()
     {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?page=packages");
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
                 echo "Lỗi bảo mật CSRF!";
@@ -40,6 +45,11 @@ class PackageController
 
     public function edit()
     {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?page=packages");
+            exit;
+        }
+
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         if (!$id) {
             header("Location: index.php?page=packages");
@@ -75,6 +85,11 @@ class PackageController
 
     public function delete()
     {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?page=packages");
+            exit;
+        }
+
         $id = isset($_POST['id']) ? $_POST['id'] : null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {

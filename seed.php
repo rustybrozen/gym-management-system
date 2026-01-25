@@ -8,6 +8,7 @@ require_once 'models/Subscription.php';
 $database = new Database();
 $db = $database->getConnection();
 $database->initTables();
+echo "Đã khởi tạo bảng...\n";
 
 $memberModel = new Member($db);
 $packageModel = new Package($db);

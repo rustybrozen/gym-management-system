@@ -10,6 +10,7 @@
                 <th>ID</th>
                 <th>Username</th>
                 <th>Họ tên</th>
+                <th>Vai trò</th>
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -19,6 +20,15 @@
                     <td><?php echo $admin['id']; ?></td>
                     <td><?php echo htmlspecialchars($admin['username']); ?></td>
                     <td><?php echo htmlspecialchars($admin['full_name']); ?></td>
+                    <td>
+                        <?php
+                        $role = isset($admin['role']) ? $admin['role'] : 'staff';
+                        if ($role === 'admin')
+                            echo '<span class="badge bg-danger">Admin</span>';
+                        else
+                            echo '<span class="badge bg-primary">Staff</span>';
+                        ?>
+                    </td>
                     <td>
                         <a href="index.php?page=edit_admin&id=<?php echo $admin['id']; ?>"
                             class="btn btn-sm btn-warning">Sửa</a>

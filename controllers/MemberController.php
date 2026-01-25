@@ -64,6 +64,11 @@ class MemberController
     }
     public function edit()
     {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            echo "<script>alert('Bạn không có quyền thực hiện hành động này!'); window.location.href='index.php?page=members';</script>";
+            exit;
+        }
+
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         if (!$id) {
             header("Location: index.php?page=members");
@@ -102,6 +107,11 @@ class MemberController
 
     public function delete()
     {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            echo "<script>alert('Bạn không có quyền thực hiện hành động này!'); window.location.href='index.php?page=members';</script>";
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
                 // Handle CSRF error

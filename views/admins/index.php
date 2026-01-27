@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Quản lý Admin</h2>
-    <a href="index.php?page=add_admin" class="btn btn-primary">Thêm Admin</a>
+    <h2>Quản lý Nhan Vien</h2>
+    <a href="index.php?page=add_admin" class="btn btn-primary">Thêm Nhan Vien</a>
 </div>
 
 <div class="table-responsive">
@@ -26,16 +26,18 @@
                         if ($role === 'admin')
                             echo '<span class="badge bg-danger">Admin</span>';
                         else
-                            echo '<span class="badge bg-primary">Staff</span>';
+                            echo '<span class="badge bg-primary">Nhan Vien</span>';
                         ?>
                     </td>
                     <td>
+                         <?php if ($admin['username'] !== 'admin'): ?>
                         <a href="index.php?page=edit_admin&id=<?php echo $admin['id']; ?>"
                             class="btn btn-sm btn-warning">Sửa</a>
+                            <?php endif; ?>
 
                         <?php if ($admin['username'] !== 'admin'): ?>
                             <a href="index.php?page=delete_admin&id=<?php echo $admin['id']; ?>" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Bạn có chắc chắn muốn xóa admin này?');">Xóa</a>
+                                onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</a>
                         <?php endif; ?>
                     </td>
                 </tr>

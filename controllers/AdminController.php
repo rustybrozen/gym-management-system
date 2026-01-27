@@ -55,7 +55,7 @@ class AdminController
             exit;
         }
 
-        // Prevent editing self
+     
         if ($id == $_SESSION['user_id']) {
             echo "<script>alert('Bạn không thể chỉnh sửa tài khoản đang đăng nhập!'); window.location.href='index.php?page=admins';</script>";
             exit;

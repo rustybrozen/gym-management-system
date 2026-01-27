@@ -1,4 +1,4 @@
-<h2 class="mb-4">Thêm Admin mới</h2>
+<h2 class="mb-4">Thêm nhan vien mới</h2>
 
 <?php if (isset($error)): ?>
     <div class="alert alert-danger">
@@ -9,7 +9,7 @@
 <form action="index.php?page=add_admin" method="POST">
     <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
     <div class="mb-3">
-        <label for="username" class="form-label">Tên đăng nhập (Username) <span class="text-danger">*</span></label>
+        <label for="username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="username" name="username" required>
     </div>
     <div class="mb-3">

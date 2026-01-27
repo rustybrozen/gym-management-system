@@ -119,6 +119,12 @@ switch ($page) {
         $controller->index();
         break;
 
+    case 'settings':
+        require_once 'controllers/SettingController.php';
+        $controller = new SettingController($db);
+        $controller->index();
+        break;
+
     default:
         $controller = new DashboardController($db);
         $controller->index();

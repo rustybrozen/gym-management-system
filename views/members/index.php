@@ -55,9 +55,10 @@
                     </td>
                     <td>
                         <div class="d-flex gap-1">
+                            <a href="index.php?page=edit_member&id=<?php echo $member['id']; ?>"
+                                class="btn btn-sm btn-warning">Sửa</a>
                             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                                <a href="index.php?page=edit_member&id=<?php echo $member['id']; ?>"
-                                    class="btn btn-sm btn-warning">Sửa</a>
+
 
                                 <form action="index.php?page=delete_member" method="POST"
                                     onsubmit="return confirm('Bạn có chắc muốn xóa hội viên này?');" style="display:inline;">
@@ -66,9 +67,13 @@
                                     <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                                 </form>
                             <?php endif; ?>
+                            <a href="index.php?page=member_history&id=<?php echo $member['id']; ?>"
+                                class="btn btn-sm btn-info text-white">Lịch sử GD</a>
 
-                            <a href="index.php?page=subscriptions&member_id=<?php echo $member['id']; ?>"
-                                class="btn btn-sm btn-success">Đăng ký</a>
+                            <?php if ($member['status'] != 'Active'): ?>
+                                <a href="index.php?page=subscriptions&member_id=<?php echo $member['id']; ?>"
+                                    class="btn btn-sm btn-success">Đăng ký</a>
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>

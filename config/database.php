@@ -60,11 +60,14 @@ class Database
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 member_id INTEGER NOT NULL,
                 package_id INTEGER NOT NULL,
+                admin_id INTEGER,
                 start_date DATE NOT NULL,
                 end_date DATE NOT NULL,
                 amount_paid REAL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (member_id) REFERENCES members(id),
-                FOREIGN KEY (package_id) REFERENCES packages(id)
+                FOREIGN KEY (package_id) REFERENCES packages(id),
+                FOREIGN KEY (admin_id) REFERENCES admins(id)
             );
             ";
 
@@ -77,6 +80,16 @@ class Database
                 $this->conn->exec("ALTER TABLE admins ADD COLUMN role TEXT DEFAULT 'staff'");
                 // Update existing admin to be admin role
                 $this->conn->exec("UPDATE admins SET role = 'admin' WHERE username = 'admin'");
+            }
+
+            // Check if admin_id column exists in subscriptions table
+            $checkSubColumn = $this->conn->query("PRAGMA table_info(subscriptions)");
+            $subColumns = $checkSubColumn->fetchAll(PDO::FETCH_COLUMN, 1);
+            if (!in_array('admin_id', $subColumns)) {
+                $this->conn->exec("ALTER TABLE subscriptions ADD COLUMN admin_id INTEGER REFERENCES admins(id)");
+            }
+            if (!in_array('created_at', $subColumns)) {
+                $this->conn->exec("ALTER TABLE subscriptions ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
             }
 
             $password = password_hash('123456', PASSWORD_DEFAULT);

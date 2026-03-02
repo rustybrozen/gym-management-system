@@ -63,6 +63,11 @@ switch ($page) {
         $controller->delete();
         break;
 
+    case 'member_history':
+        $controller = new MemberController($db);
+        $controller->history();
+        break;
+
     case 'api_members_search':
         $controller = new MemberController($db);
         $controller->searchApi();

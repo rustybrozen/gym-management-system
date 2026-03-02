@@ -32,14 +32,24 @@ class SubscriptionController
             $memberId = $_POST['member_id'];
             $packageId = $_POST['package_id'];
 
+            // Check if member already has an active subscription
+            $activeSub = $this->subscriptionModel->getLatestActiveByMember($memberId);
+            if ($activeSub) {
+                // If they have an active subscription, display an error
+                // Redirect back to members page with error message (you may want to handle this better in the view)
+                echo "<script>alert('Hội viên này đang có gói tập còn hạn. Không thể đăng ký thêm.'); window.location.href='index.php?page=members';</script>";
+                exit;
+            }
+
             $package = $this->packageModel->getById($packageId);
 
             if ($package) {
                 $startDate = date('Y-m-d');
                 $endDate = date('Y-m-d', strtotime($startDate . ' + ' . $package['duration_days'] . ' days'));
                 $amount = $package['price'];
+                $adminId = $_SESSION['user_id'] ?? null;
 
-                if ($this->subscriptionModel->create($memberId, $packageId, $startDate, $endDate, $amount)) {
+                if ($this->subscriptionModel->create($memberId, $packageId, $adminId, $startDate, $endDate, $amount)) {
                     header("Location: index.php?page=members");
                     exit;
                 }

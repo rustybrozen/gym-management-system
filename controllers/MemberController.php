@@ -37,6 +37,26 @@ class MemberController
         include 'views/layout.php';
     }
 
+    public function history()
+    {
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        if (!$id) {
+            header("Location: index.php?page=members");
+            exit;
+        }
+
+        $member = $this->memberModel->getById($id);
+        if (!$member) {
+            header("Location: index.php?page=members");
+            exit;
+        }
+
+        $history = $this->subscriptionModel->getHistoryByMember($id);
+
+        $content = 'views/members/history.php';
+        include 'views/layout.php';
+    }
+
     public function create()
     {
         $error = null;
@@ -64,10 +84,10 @@ class MemberController
     }
     public function edit()
     {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            echo "<script>alert('Bạn không có quyền thực hiện hành động này!'); window.location.href='index.php?page=members';</script>";
-            exit;
-        }
+        // if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        //     echo "<script>alert('Bạn không có quyền thực hiện hành động này!'); window.location.href='index.php?page=members';</script>";
+        //     exit;
+        // }
 
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         if (!$id) {

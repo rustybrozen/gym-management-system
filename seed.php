@@ -48,16 +48,7 @@ foreach ($members as $mem) {
     }
 }
 
-// Create subscription for the first member
-$memberA = $db->query("SELECT * FROM members WHERE phone_number = '0901234567'")->fetch();
-$package1 = $db->query("SELECT * FROM packages WHERE package_name = '1 tháng'")->fetch();
 
-if ($memberA && $package1) {
-    $startDate = date('Y-m-d');
-    $endDate = date('Y-m-d', strtotime($startDate . ' + 30 days'));
-    $subscriptionModel->create($memberA['id'], $package1['id'], $startDate, $endDate, $package1['price']);
-    echo "Đã tạo đăng ký cho Nguyễn Văn A\n";
-}
 
 echo "Hoàn tất tạo dữ liệu mẫu.\n";
 ?>

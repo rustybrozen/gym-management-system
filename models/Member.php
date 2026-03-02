@@ -88,7 +88,7 @@ class Member
 
     public function delete($id)
     {
-        // First delete subscriptions to avoid foreign key constraint failure if CASCADE isn't set
+    
         $querySub = "DELETE FROM subscriptions WHERE member_id = ?";
         $stmtSub = $this->conn->prepare($querySub);
         $stmtSub->bindParam(1, $id);

@@ -9,7 +9,9 @@
     <div class="mb-3">
         <label for="username" class="form-label">Tên đăng nhập (Username)</label>
         <input type="text" class="form-control" id="username" name="username"
-            value="<?php echo htmlspecialchars($admin['username']); ?>" required <?php echo ($admin['username'] === 'admin') ? 'readonly' : ''; ?>>
+            value="<?php echo htmlspecialchars($admin['username']); ?>" required pattern="[a-z0-9]+"
+            title="Tên đăng nhập chỉ được chứa chữ cái thường và số, không có ký tự đặc biệt"
+            oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '')" <?php echo ($admin['username'] === 'admin') ? 'readonly' : ''; ?>>
         <?php if ($admin['username'] === 'admin'): ?>
             <div class="form-text">Không thể đổi username của Admin chính.</div>
         <?php endif; ?>

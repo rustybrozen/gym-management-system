@@ -30,12 +30,14 @@ class AdminController
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
                 $error = "Lỗi bảo mật CSRF!";
             } else {
-                $username = $_POST['username'];
+                $username = strtolower($_POST['username']);
                 $password = $_POST['password'];
                 $fullName = $_POST['full_name'];
                 $role = $_POST['role'] ?? 'staff';
 
-                if ($this->adminModel->create($username, $password, $fullName, $role)) {
+                if (!preg_match('/^[a-z0-9]+$/', $username)) {
+                    $error = "Tên đăng nhập chỉ được chứa chữ cái thường và số, không có ký tự đặc biệt.";
+                } elseif ($this->adminModel->create($username, $password, $fullName, $role)) {
                     header("Location: index.php?page=admins");
                     exit;
                 } else {
@@ -76,20 +78,24 @@ class AdminController
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
                 $error = "Lỗi bảo mật CSRF!";
             } else {
-                $username = $_POST['username'];
+                $username = strtolower($_POST['username']);
                 $password = $_POST['password'];
                 $fullName = $_POST['full_name'];
                 $role = $_POST['role'] ?? 'staff';
 
-                if ($admin['username'] === 'admin') {
-                    $role = 'admin'; // Force role to admin if editing super user
-                }
-
-                if ($this->adminModel->update($id, $username, $password, $fullName, $role)) {
-                    header("Location: index.php?page=admins");
-                    exit;
+                if (!preg_match('/^[a-z0-9]+$/', $username)) {
+                    $error = "Tên đăng nhập chỉ được chứa chữ cái thường và số, không có ký tự đặc biệt.";
                 } else {
-                    $error = "Có lỗi xảy ra cập nhật.";
+                    if ($admin['username'] === 'admin') {
+                        $role = 'admin'; // Force role to admin if editing super user
+                    }
+
+                    if ($this->adminModel->update($id, $username, $password, $fullName, $role)) {
+                        header("Location: index.php?page=admins");
+                        exit;
+                    } else {
+                        $error = "Có lỗi xảy ra cập nhật.";
+                    }
                 }
             }
         }

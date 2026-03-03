@@ -18,7 +18,7 @@ class AuthController
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
                 $error = "Lỗi bảo mật CSRF!";
             } else {
-                $username = $_POST['username'];
+                $username = strtolower($_POST['username']);
                 $password = $_POST['password'];
 
                 $user = $this->adminModel->login($username, $password);

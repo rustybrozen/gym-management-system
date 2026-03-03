@@ -44,7 +44,8 @@
             <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
             <div class="mb-3">
                 <label for="username" class="form-label">Tài khoản</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <input type="text" class="form-control" id="username" name="username" required
+                    oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '')">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Mật khẩu</label>

@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Quản lý Nhan Vien</h2>
-    <a href="index.php?page=add_admin" class="btn btn-primary">Thêm Nhan Vien</a>
+    <h2>Quản lý nhân viên</h2>
+    <a href="index.php?page=add_admin" class="btn btn-primary">Thêm nhân viên</a>
 </div>
 
 <div class="table-responsive">
@@ -30,10 +30,10 @@
                         ?>
                     </td>
                     <td>
-                         <?php if ($admin['username'] !== 'admin'): ?>
-                        <a href="index.php?page=edit_admin&id=<?php echo $admin['id']; ?>"
-                            class="btn btn-sm btn-warning">Sửa</a>
-                            <?php endif; ?>
+                        <?php if ($admin['username'] !== 'admin'): ?>
+                            <a href="index.php?page=edit_admin&id=<?php echo $admin['id']; ?>"
+                                class="btn btn-sm btn-warning">Sửa</a>
+                        <?php endif; ?>
 
                         <?php if ($admin['username'] !== 'admin'): ?>
                             <a href="index.php?page=delete_admin&id=<?php echo $admin['id']; ?>" class="btn btn-sm btn-danger"

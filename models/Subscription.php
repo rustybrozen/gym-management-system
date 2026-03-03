@@ -67,5 +67,88 @@ class Subscription
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function getTotalRevenue()
+    {
+        $query = "SELECT SUM(amount_paid) as total FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['total'] ? $row['total'] : 0;
+    }
+
+    public function getMonthlyRevenue()
+    {
+        $query = "SELECT SUM(amount_paid) as total FROM " . $this->table . " 
+                  WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now')";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['total'] ? $row['total'] : 0;
+    }
+
+    public function getMonthlyNewSubscriptions()
+    {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " 
+                  WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now')";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['count'];
+    }
+
+    public function getFilteredStats($start_date, $end_date)
+    {
+        // Revenue in period
+        $queryRev = "SELECT SUM(amount_paid) as revenue FROM " . $this->table . " 
+                     WHERE date(created_at) >= ? AND date(created_at) <= ?";
+        $stmtRev = $this->conn->prepare($queryRev);
+        $stmtRev->bindParam(1, $start_date);
+        $stmtRev->bindParam(2, $end_date);
+        $stmtRev->execute();
+        $revenue = $stmtRev->fetch()['revenue'];
+
+        // Subscriptions in period
+        $querySubs = "SELECT COUNT(*) as subs_count FROM " . $this->table . " 
+                      WHERE date(created_at) >= ? AND date(created_at) <= ?";
+        $stmtSubs = $this->conn->prepare($querySubs);
+        $stmtSubs->bindParam(1, $start_date);
+        $stmtSubs->bindParam(2, $end_date);
+        $stmtSubs->execute();
+        $subsCount = $stmtSubs->fetch()['subs_count'];
+
+        return [
+            'revenue' => $revenue ? $revenue : 0,
+            'subscriptions' => $subsCount ? $subsCount : 0
+        ];
+    }
+
+    public function getRevenueChartData($start_date, $end_date)
+    {
+        $query = "SELECT date(created_at) as log_date, SUM(amount_paid) as daily_revenue 
+                  FROM " . $this->table . " 
+                  WHERE date(created_at) >= ? AND date(created_at) <= ? 
+                  GROUP BY date(created_at) 
+                  ORDER BY date(created_at) ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $start_date);
+        $stmt->bindParam(2, $end_date);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getSubscriptionsChartData($start_date, $end_date)
+    {
+        $query = "SELECT date(created_at) as log_date, COUNT(*) as daily_subs 
+                  FROM " . $this->table . " 
+                  WHERE date(created_at) >= ? AND date(created_at) <= ? 
+                  GROUP BY date(created_at) 
+                  ORDER BY date(created_at) ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $start_date);
+        $stmt->bindParam(2, $end_date);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
 ?>

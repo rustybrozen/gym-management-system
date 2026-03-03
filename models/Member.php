@@ -88,7 +88,7 @@ class Member
 
     public function delete($id)
     {
-    
+
         $querySub = "DELETE FROM subscriptions WHERE member_id = ?";
         $stmtSub = $this->conn->prepare($querySub);
         $stmtSub->bindParam(1, $id);
@@ -102,6 +102,34 @@ class Member
             return true;
         }
         return false;
+    }
+
+    public function getTotalMembers()
+    {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['count'];
+    }
+
+    public function getMonthlyNewMembers()
+    {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " 
+                  WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now')";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['count'];
+    }
+
+    public function getRecentMembers($limit = 5)
+    {
+        $query = "SELECT * FROM " . $this->table . " ORDER BY created_at DESC LIMIT ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 }
 ?>

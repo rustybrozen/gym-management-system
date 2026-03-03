@@ -79,5 +79,14 @@ class Package
         $row = $stmt->fetch();
         return $row['count'] > 0;
     }
+
+    public function getActivePackagesCount()
+    {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $row['count'];
+    }
 }
 ?>

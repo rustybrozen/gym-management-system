@@ -1,4 +1,4 @@
-<h2 class="mb-4">Thêm nhan vien mới</h2>
+<h2 class="mb-4">Thêm nhân viên mới</h2>
 
 <?php if (isset($error)): ?>
     <div class="alert alert-danger">

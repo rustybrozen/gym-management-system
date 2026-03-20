@@ -88,5 +88,37 @@ class Package
         $row = $stmt->fetch();
         return $row['count'];
     }
+
+    public function checkDuplicate($name, $duration, $exclude_id = null)
+    {
+        require_once __DIR__ . '/../utils/StringHelper.php';
+        $newNameUnaccent = mb_strtolower(StringHelper::unaccent(trim($name)), 'UTF-8');
+
+        // Check for duplicate name using accent-insensitive matching
+        $allPackages = $this->getAll();
+        foreach ($allPackages as $pkg) {
+            if ($exclude_id && $pkg['id'] == $exclude_id) {
+                continue;
+            }
+            $existingNameUnaccent = mb_strtolower(StringHelper::unaccent(trim($pkg['package_name'])), 'UTF-8');
+            if ($existingNameUnaccent === $newNameUnaccent) {
+                return 'name';
+            }
+        }
+
+        // Check for duplicate duration
+        $queryDuration = "SELECT id FROM " . $this->table . " WHERE duration_days = :duration" . ($exclude_id ? " AND id != :exclude_id" : "") . " LIMIT 1";
+        $stmtDuration = $this->conn->prepare($queryDuration);
+        $stmtDuration->bindParam(':duration', $duration);
+        if ($exclude_id) {
+            $stmtDuration->bindParam(':exclude_id', $exclude_id);
+        }
+        $stmtDuration->execute();
+        if ($stmtDuration->fetch()) {
+            return 'duration'; // Duplicate duration found
+        }
+
+        return false; // No duplicates
+    }
 }
 ?>

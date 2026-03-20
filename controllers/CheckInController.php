@@ -28,12 +28,21 @@ class CheckInController
         }
 
         // Find member
-        $sql = "SELECT * FROM members WHERE phone_number = :keyword OR full_name LIKE :keyword_like LIMIT 1";
+        require_once __DIR__ . '/../utils/StringHelper.php';
+        $sql = "SELECT * FROM members ORDER BY created_at DESC";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':keyword', $keyword);
-        $stmt->bindValue(':keyword_like', "%$keyword%");
         $stmt->execute();
-        $member = $stmt->fetch();
+        $allMembers = $stmt->fetchAll();
+        
+        $member = null;
+        $keywordUnaccent = mb_strtolower(StringHelper::unaccent($keyword), 'UTF-8');
+        foreach ($allMembers as $m) {
+            $nameUnaccent = mb_strtolower(StringHelper::unaccent($m['full_name']), 'UTF-8');
+            if ($m['phone_number'] === $keyword || strpos($nameUnaccent, $keywordUnaccent) !== false) {
+                $member = $m;
+                break;
+            }
+        }
 
         if (!$member) {
             return ['status' => 'error', 'message' => 'Không tìm thấy hội viên!'];

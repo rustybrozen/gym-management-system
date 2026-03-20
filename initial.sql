@@ -9,8 +9,8 @@
             
 CREATE TABLE IF NOT EXISTS packages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                package_name TEXT NOT NULL,
-                duration_days INTEGER NOT NULL,
+                package_name TEXT NOT NULL UNIQUE,
+                duration_days INTEGER NOT NULL UNIQUE,
                 price REAL NOT NULL
             );
 

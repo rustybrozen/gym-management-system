@@ -10,6 +10,7 @@ require_once 'controllers/SubscriptionController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/AdminController.php';
 require_once 'utils/Csrf.php';
+require_once 'utils/StringHelper.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -96,6 +97,11 @@ switch ($page) {
     case 'subscriptions':
         $controller = new SubscriptionController($db);
         $controller->create();
+        break;
+
+    case 'cancel_subscription':
+        $controller = new SubscriptionController($db);
+        $controller->cancel();
         break;
 
     case 'admins':

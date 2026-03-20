@@ -47,6 +47,7 @@ class MemberController
 
         $member = $this->memberModel->getById($id);
         if (!$member) {
+            $_SESSION['error'] = 'Hội viên không tồn tại!';
             header("Location: index.php?page=members");
             exit;
         }
@@ -97,6 +98,7 @@ class MemberController
 
         $member = $this->memberModel->getById($id);
         if (!$member) {
+            $_SESSION['error'] = 'Hội viên không tồn tại!';
             header("Location: index.php?page=members");
             exit;
         }
@@ -141,7 +143,17 @@ class MemberController
 
             $id = $_POST['id'] ?? null;
             if ($id) {
-                $this->memberModel->delete($id);
+                // Check if member exists
+                $member = $this->memberModel->getById($id);
+                if (!$member) {
+                    $_SESSION['error'] = 'Hội viên không tồn tại!';
+                    header("Location: index.php?page=members");
+                    exit;
+                }
+                
+                if ($this->memberModel->delete($id)) {
+                    $_SESSION['success'] = 'Xóa hội viên thành công!';
+                }
             }
         }
         header("Location: index.php?page=members");

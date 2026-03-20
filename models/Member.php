@@ -20,15 +20,20 @@ class Member
 
     public function search($keyword)
     {
-        $query = "SELECT * FROM " . $this->table . " 
-                  WHERE full_name LIKE ? OR phone_number LIKE ? 
-                  ORDER BY created_at DESC";
-        $stmt = $this->conn->prepare($query);
-        $searchTerm = "%{$keyword}%";
-        $stmt->bindParam(1, $searchTerm);
-        $stmt->bindParam(2, $searchTerm);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $allMembers = $this->getAll();
+        
+        require_once __DIR__ . '/../utils/StringHelper.php';
+        $keywordUnaccent = mb_strtolower(StringHelper::unaccent($keyword), 'UTF-8');
+        
+        $results = array_filter($allMembers, function($member) use ($keyword, $keywordUnaccent) {
+            $nameUnaccent = mb_strtolower(StringHelper::unaccent($member['full_name']), 'UTF-8');
+            $phoneMatch = strpos($member['phone_number'], $keyword) !== false;
+            $nameMatch = strpos($nameUnaccent, $keywordUnaccent) !== false;
+            
+            return $phoneMatch || $nameMatch;
+        });
+        
+        return array_values($results);
     }
 
     public function getById($id)

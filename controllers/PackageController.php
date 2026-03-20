@@ -25,19 +25,34 @@ class PackageController
             exit;
         }
 
+        $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
-                echo "Lỗi bảo mật CSRF!";
-                exit;
-            }
-            $name = $_POST['package_name'];
-            $duration = $_POST['duration_days'];
-            $price = $_POST['price'];
+                $_SESSION['error'] = "Lỗi bảo mật CSRF!";
+            } else {
+                $name = trim($_POST['package_name']);
+                $duration = (int)$_POST['duration_days'];
+                $price = (float)$_POST['price'];
 
-            if ($this->packageModel->create($name, $duration, $price)) {
-                header("Location: index.php?page=packages");
-                exit;
+                if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $name)) {
+                    $_SESSION['error'] = "Tên gói tập không hợp lệ (không chứa ký tự đặc biệt).";
+                } else {
+                    $duplicate = $this->packageModel->checkDuplicate($name, $duration);
+                    if ($duplicate === 'name') {
+                        $_SESSION['error'] = "Tên gói tập đã tồn tại.";
+                    } elseif ($duplicate === 'duration') {
+                        $_SESSION['error'] = "Thời hạn gói tập đã tồn tại.";
+                    } else {
+                    if ($this->packageModel->create($name, $duration, $price)) {
+                        $_SESSION['success'] = "Thêm gói tập thành công!";
+                        header("Location: index.php?page=packages");
+                        exit;
+                    } else {
+                        $_SESSION['error'] = "Có lỗi xảy ra khi tạo gói tập.";
+                    }
+                }
             }
+        }
         }
         $content = 'views/packages/create.php';
         include 'views/layout.php';
@@ -58,6 +73,7 @@ class PackageController
 
         $package = $this->packageModel->getById($id);
         if (!$package) {
+            $_SESSION['error'] = 'Gói tập không tồn tại!';
             header("Location: index.php?page=packages");
             exit;
         }
@@ -65,17 +81,29 @@ class PackageController
         $error = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
-                $error = "Lỗi bảo mật CSRF!";
+                $_SESSION['error'] = "Lỗi bảo mật CSRF!";
             } else {
-                $name = $_POST['package_name'];
-                $duration = $_POST['duration_days'];
-                $price = $_POST['price'];
+                $name = trim($_POST['package_name']);
+                $duration = (int)$_POST['duration_days'];
+                $price = (float)$_POST['price'];
 
-                if ($this->packageModel->update($id, $name, $duration, $price)) {
-                    header("Location: index.php?page=packages");
-                    exit;
+                if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $name)) {
+                    $_SESSION['error'] = "Tên gói tập không hợp lệ (không chứa ký tự đặc biệt).";
                 } else {
-                    $error = "Có lỗi xảy ra khi cập nhật gói tập.";
+                    $duplicate = $this->packageModel->checkDuplicate($name, $duration, $id);
+                    if ($duplicate === 'name') {
+                        $_SESSION['error'] = "Tên gói tập đã tồn tại.";
+                    } elseif ($duplicate === 'duration') {
+                        $_SESSION['error'] = "Thời hạn gói tập đã tồn tại.";
+                    } else {
+                        if ($this->packageModel->update($id, $name, $duration, $price)) {
+                            $_SESSION['success'] = "Cập nhật gói tập thành công!";
+                            header("Location: index.php?page=packages");
+                            exit;
+                        } else {
+                            $_SESSION['error'] = "Có lỗi xảy ra khi cập nhật gói tập.";
+                        }
+                    }
                 }
             }
         }
@@ -102,7 +130,17 @@ class PackageController
                 exit;
             }
 
-            $this->packageModel->delete($id);
+            // Check if package exists
+            $package = $this->packageModel->getById($id);
+            if (!$package) {
+                $_SESSION['error'] = 'Gói tập không tồn tại!';
+                header("Location: index.php?page=packages");
+                exit;
+            }
+
+            if ($this->packageModel->delete($id)) {
+                $_SESSION['success'] = 'Xóa gói tập thành công!';
+            }
         }
         header("Location: index.php?page=packages");
         exit;

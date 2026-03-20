@@ -150,5 +150,23 @@ class Subscription
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function cancelActiveSubscription($member_id)
+    {
+        $query = "UPDATE " . $this->table . " 
+                  SET end_date = DATE('now', '-1 day') 
+                  WHERE id = (
+                      SELECT id FROM " . $this->table . " 
+                      WHERE member_id = ? AND end_date >= DATE('now') 
+                      ORDER BY end_date DESC LIMIT 1
+                  )";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $member_id);
+        
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
 }
 ?>

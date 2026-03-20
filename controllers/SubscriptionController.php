@@ -32,6 +32,15 @@ class SubscriptionController
             $memberId = $_POST['member_id'];
             $packageId = $_POST['package_id'];
 
+            $member = $this->memberModel->getById($memberId);
+            $package = $this->packageModel->getById($packageId);
+            
+            if (!$member || !$package) {
+                $_SESSION['error'] = 'Hội viên hoặc gói tập không tồn tại!';
+                header("Location: index.php?page=members");
+                exit;
+            }
+
             // Check if member already has an active subscription
             $activeSub = $this->subscriptionModel->getLatestActiveByMember($memberId);
             if ($activeSub) {
@@ -66,6 +75,40 @@ class SubscriptionController
 
         $content = 'views/subscriptions/create.php';
         include 'views/layout.php';
+    }
+
+    public function cancel()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+                $_SESSION['error'] = 'Lỗi bảo mật CSRF!';
+                header("Location: index.php?page=members");
+                exit;
+            }
+
+            $memberId = $_POST['member_id'] ?? null;
+            if (!$memberId) {
+                $_SESSION['error'] = 'Thiếu thông tin hội viên!';
+                header("Location: index.php?page=members");
+                exit;
+            }
+
+            $member = $this->memberModel->getById($memberId);
+            if (!$member) {
+                $_SESSION['error'] = 'Hội viên không tồn tại!';
+                header("Location: index.php?page=members");
+                exit;
+            }
+
+            if ($this->subscriptionModel->cancelActiveSubscription($memberId)) {
+                $_SESSION['success'] = 'Hủy gói tập thành công!';
+            } else {
+                $_SESSION['error'] = 'Hủy gói tập thất bại hoặc hội viên không có gói tập còn hạn.';
+            }
+        }
+        
+        header("Location: index.php?page=members");
+        exit;
     }
 }
 ?>

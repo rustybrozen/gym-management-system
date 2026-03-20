@@ -1300,6 +1300,16 @@
 
             <!-- Page content -->
             <div id="content">
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert-flat">
+                        <?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert-flat-success">
+                        <?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                    </div>
+                <?php endif; ?>
                 <?php
                 if (isset($content)) {
                     include $content;

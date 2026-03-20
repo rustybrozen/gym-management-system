@@ -79,6 +79,14 @@
 
                                     <?php if ($member['status'] != 'Active'): ?>
                                         <a href="index.php?page=subscriptions&member_id=<?php echo $member['id']; ?>" class="act-btn act-sub">Đăng ký</a>
+                                    <?php else: ?>
+                                        <form action="index.php?page=cancel_subscription" method="POST"
+                                            onsubmit="return confirm('Bạn có chắc muốn hủy gói tập của hội viên này?');"
+                                            style="display:inline;">
+                                            <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
+                                            <input type="hidden" name="member_id" value="<?php echo $member['id']; ?>">
+                                            <button type="submit" class="act-btn" style="background: rgba(230,126,34,0.1) !important; color: #e67e22 !important; border: 1px solid rgba(230,126,34,0.25) !important;">Hủy gói tập</button>
+                                        </form>
                                     <?php endif; ?>
                                 </div>
                             </td>

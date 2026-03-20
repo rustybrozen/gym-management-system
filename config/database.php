@@ -1,21 +1,35 @@
 <?php
 
+require_once __DIR__ . '/../utils/StringHelper.php';
+
 class Database
 {
     private $db_file = __DIR__ . '/../db/database.sqlite';
     public $conn;
+    public $is_new_db = false;
 
     public function getConnection()
     {
         $this->conn = null;
         try {
+            $db_dir = dirname($this->db_file);
+            if (!is_dir($db_dir)) {
+                mkdir($db_dir, 0777, true);
+            }
+
             if (!file_exists($this->db_file)) {
+                $this->is_new_db = true;
                 touch($this->db_file);
             }
 
             $this->conn = new PDO("sqlite:" . $this->db_file);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+            // Register custom sqlite function for accent-insensitive search (if supported by PDO driver)
+            if (method_exists($this->conn, 'sqliteCreateFunction')) {
+                $this->conn->sqliteCreateFunction('unaccent', ['StringHelper', 'unaccent'], 1);
+            }
 
             $this->conn->exec("PRAGMA foreign_keys = ON;");
 
@@ -95,7 +109,87 @@ class Database
             $password = password_hash('123456', PASSWORD_DEFAULT);
             $sql_insert = "INSERT OR IGNORE INTO admins (id, username, password, full_name, role) VALUES (1, 'admin', '$password', 'System Admin', 'admin')";
             $this->conn->exec($sql_insert);
+
+            // Auto-seed data if the database was just created
+            if ($this->is_new_db) {
+                $this->seed(false);
+            }
         }
+    }
+
+    // =========================================================================
+    // DỮ LIỆU MẪU (SEED DATA)
+    // Dev có thể chỉnh sửa các mảng dữ liệu bên dưới để thay đổi dữ liệu seed
+    // =========================================================================
+    public function seed($verbose = true)
+    {
+        if (!$this->conn) {
+            if ($verbose) echo "Chưa kết nối CSDL.\n";
+            return;
+        }
+
+        if ($verbose) echo "Đang xóa dữ liệu cũ...\n";
+        $this->conn->exec("DELETE FROM subscriptions");
+        $this->conn->exec("DELETE FROM members");
+        $this->conn->exec("DELETE FROM packages");
+        $this->conn->exec("DELETE FROM sqlite_sequence WHERE name IN ('subscriptions', 'members', 'packages')");
+        if ($verbose) echo "Đã xóa xong.\n";
+
+        if ($verbose) echo "Bắt đầu tạo dữ liệu mẫu...\n";
+
+        // Định nghĩa các gói tập
+        $packages = [
+            ['package_name' => '1 tháng', 'duration_days' => 30, 'price' => 500000],
+            ['package_name' => '3 tháng', 'duration_days' => 90, 'price' => 1350000],
+            ['package_name' => '6 tháng', 'duration_days' => 180, 'price' => 2500000],
+            ['package_name' => '1 năm', 'duration_days' => 365, 'price' => 4500000],
+        ];
+
+        // Lưu các gói tập vào CSDL
+        $stmtPkg = $this->conn->prepare("INSERT INTO packages (package_name, duration_days, price) VALUES (:package_name, :duration_days, :price)");
+        foreach ($packages as $pkg) {
+            $stmtPkg->execute([
+                ':package_name' => $pkg['package_name'],
+                ':duration_days' => $pkg['duration_days'],
+                ':price' => $pkg['price']
+            ]);
+            if ($verbose) echo "Đã tạo gói tập: {$pkg['package_name']}\n";
+        }
+
+        // Định nghĩa các hội viên
+        $members = [
+            ['full_name' => 'Nguyễn Văn A', 'phone_number' => '0901234567', 'gender' => 'Nam', 'birth_date' => '1990-01-01', 'address' => 'Hà Nội', 'health_notes' => ''],
+            ['full_name' => 'Trần Thị B', 'phone_number' => '0912345678', 'gender' => 'Nữ', 'birth_date' => '1995-05-15', 'address' => 'Đà Nẵng', 'health_notes' => ''],
+            ['full_name' => 'Lê Văn C', 'phone_number' => '0987654321', 'gender' => 'Nam', 'birth_date' => '1988-11-20', 'address' => 'TP.HCM', 'health_notes' => ''],
+        ];
+
+        // Lưu các hội viên vào CSDL
+        $stmtMem = $this->conn->prepare("INSERT INTO members (full_name, phone_number, gender, birth_date, address, health_notes) VALUES (:full_name, :phone_number, :gender, :birth_date, :address, :health_notes)");
+        foreach ($members as $mem) {
+            $stmtMem->execute([
+                ':full_name' => $mem['full_name'],
+                ':phone_number' => $mem['phone_number'],
+                ':gender' => $mem['gender'],
+                ':birth_date' => $mem['birth_date'],
+                ':address' => $mem['address'],
+                ':health_notes' => $mem['health_notes']
+            ]);
+            if ($verbose) echo "Đã tạo hội viên: {$mem['full_name']}\n";
+        }
+
+        if ($verbose) echo "Hoàn tất tạo dữ liệu mẫu.\n";
+    }
+}
+
+// Cho phép chạy file này trực tiếp từ CLI để seed data
+if (php_sapi_name() === 'cli' && basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    $database = new Database();
+    $db = $database->getConnection();
+    
+    if ($db) {
+        $database->initTables();
+        echo "Cập nhật bảng thành công.\n";
+        $database->seed();
     }
 }
 ?>

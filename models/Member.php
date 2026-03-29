@@ -85,8 +85,12 @@ class Member
         $stmt->bindParam(':address', $address);
         $stmt->bindParam(':health_notes', $health_notes);
 
-        if ($stmt->execute()) {
-            return true;
+        try {
+            if ($stmt->execute()) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            return false;
         }
         return false;
     }

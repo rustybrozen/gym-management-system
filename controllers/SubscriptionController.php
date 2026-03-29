@@ -59,6 +59,7 @@ class SubscriptionController
                 $adminId = $_SESSION['user_id'] ?? null;
 
                 if ($this->subscriptionModel->create($memberId, $packageId, $adminId, $startDate, $endDate, $amount)) {
+                    $_SESSION['success'] = 'Đã đăng ký gói tập "' . $package['package_name'] . '" cho thành viên "' . $member['full_name'] . '" thành công!';
                     header("Location: index.php?page=members");
                     exit;
                 }

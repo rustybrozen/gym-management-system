@@ -43,16 +43,22 @@ class PackageController
                     } elseif ($duplicate === 'duration') {
                         $_SESSION['error'] = "Thời hạn gói tập đã tồn tại.";
                     } else {
-                    if ($this->packageModel->create($name, $duration, $price)) {
-                        $_SESSION['success'] = "Thêm gói tập thành công!";
-                        header("Location: index.php?page=packages");
-                        exit;
-                    } else {
-                        $_SESSION['error'] = "Có lỗi xảy ra khi tạo gói tập.";
+                        if ($this->packageModel->create($name, $duration, $price)) {
+                            $_SESSION['success'] = "Thêm gói tập thành công!";
+                            header("Location: index.php?page=packages");
+                            exit;
+                        } else {
+                            $_SESSION['error'] = "Có lỗi xảy ra khi tạo gói tập.";
+                        }
                     }
                 }
+                
+                $package = [
+                    'package_name' => $name,
+                    'duration_days' => $duration,
+                    'price' => $price
+                ];
             }
-        }
         }
         $content = 'views/packages/create.php';
         include 'views/layout.php';
@@ -105,6 +111,9 @@ class PackageController
                         }
                     }
                 }
+                $package['package_name'] = $name;
+                $package['duration_days'] = $duration;
+                $package['price'] = $price;
             }
         }
         $content = 'views/packages/edit.php';

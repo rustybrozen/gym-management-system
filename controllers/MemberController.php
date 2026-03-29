@@ -77,6 +77,14 @@ class MemberController
                     exit;
                 } else {
                     $error = "Có lỗi xảy ra! Có thể số điện thoại đã tồn tại.";
+                    $member = [
+                        'full_name' => $fullName,
+                        'phone_number' => $phone,
+                        'gender' => $gender,
+                        'birth_date' => $birthDate,
+                        'address' => $address,
+                        'health_notes' => $healthNotes
+                    ];
                 }
             }
         }
@@ -120,6 +128,12 @@ class MemberController
                     exit;
                 } else {
                     $error = "Có lỗi xảy ra! Có thể số điện thoại đã tồn tại.";
+                    $member['full_name'] = $fullName;
+                    $member['phone_number'] = $phone;
+                    $member['gender'] = $gender;
+                    $member['birth_date'] = $birthDate;
+                    $member['address'] = $address;
+                    $member['health_notes'] = $healthNotes;
                 }
             }
         }

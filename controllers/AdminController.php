@@ -41,8 +41,13 @@ class AdminController
                     header("Location: index.php?page=admins");
                     exit;
                 } else {
-                    $error = "Tên đăng nhập đã tồn tại hoặc có lỗi xảy ra.";
+                    $error = "Tên đăng nhập đã tồn tại";
                 }
+                
+                $admin = [
+                    'username' => $username,
+                    'full_name' => $fullName
+                ];
             }
         }
         $content = 'views/admins/create.php';
@@ -94,9 +99,13 @@ class AdminController
                         header("Location: index.php?page=admins");
                         exit;
                     } else {
-                        $error = "Có lỗi xảy ra cập nhật.";
+                        $error = "Tên đăng nhập đã tồn tại";
                     }
                 }
+                
+                $admin['username'] = $username;
+                $admin['full_name'] = $fullName;
+                $admin['role'] = $role;
             }
         }
 

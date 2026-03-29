@@ -9,11 +9,11 @@
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="full_name" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="full_name" name="full_name" required>
+            <input type="text" class="form-control" id="full_name" name="full_name" value="<?php echo isset($member['full_name']) ? htmlspecialchars($member['full_name']) : ''; ?>" required>
         </div>
         <div class="col-md-6 mb-3">
             <label for="phone_number" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+            <input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo isset($member['phone_number']) ? htmlspecialchars($member['phone_number']) : ''; ?>" required>
         </div>
     </div>
 
@@ -21,26 +21,26 @@
         <div class="col-md-6 mb-3">
             <label for="gender" class="form-label">Giới tính</label>
             <select class="form-select" id="gender" name="gender">
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
+                <option value="Nam" <?php echo (isset($member['gender']) && $member['gender'] == 'Nam') ? 'selected' : ''; ?>>Nam</option>
+                <option value="Nữ" <?php echo (isset($member['gender']) && $member['gender'] == 'Nữ') ? 'selected' : ''; ?>>Nữ</option>
+                <option value="Khác" <?php echo (isset($member['gender']) && $member['gender'] == 'Khác') ? 'selected' : ''; ?>>Khác</option>
             </select>
         </div>
         <div class="col-md-6 mb-3">
             <label for="birth_date" class="form-label">Ngày sinh</label>
-            <input type="date" class="form-control" id="birth_date" name="birth_date">
+            <input type="date" class="form-control" id="birth_date" name="birth_date" value="<?php echo isset($member['birth_date']) ? $member['birth_date'] : ''; ?>">
         </div>
     </div>
 
     <div class="mb-3">
         <label for="address" class="form-label">Địa chỉ</label>
-        <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+        <textarea class="form-control" id="address" name="address" rows="2"><?php echo isset($member['address']) ? htmlspecialchars($member['address']) : ''; ?></textarea>
     </div>
 
     <div class="mb-3">
         <label for="health_notes" class="form-label">Ghi chú sức khỏe/Bệnh lý</label>
         <textarea class="form-control" id="health_notes" name="health_notes" rows="3"
-            placeholder="Ghi chú nếu có..."></textarea>
+            placeholder="Ghi chú nếu có..."><?php echo isset($member['health_notes']) ? htmlspecialchars($member['health_notes']) : ''; ?></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Lưu thông tin</button>

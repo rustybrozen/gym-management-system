@@ -15,6 +15,7 @@
                     class="checkin-input"
                     placeholder="Nhập để tìm kiếm..."
                     required
+                    minlength="5"
                     autofocus
                 >
                 <button type="submit" class="checkin-btn">Kiểm tra</button>

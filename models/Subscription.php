@@ -12,8 +12,9 @@ class Subscription
 
     public function create($member_id, $package_id, $admin_id, $start_date, $end_date, $amount_paid)
     {
-        $query = "INSERT INTO " . $this->table . " (member_id, package_id, admin_id, start_date, end_date, amount_paid) 
-                  VALUES (:member_id, :package_id, :admin_id, :start_date, :end_date, :amount_paid)";
+        $created_at = date('Y-m-d H:i:s');
+        $query = "INSERT INTO " . $this->table . " (member_id, package_id, admin_id, start_date, end_date, amount_paid, created_at) 
+                  VALUES (:member_id, :package_id, :admin_id, :start_date, :end_date, :amount_paid, :created_at)";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':member_id', $member_id);
@@ -22,6 +23,7 @@ class Subscription
         $stmt->bindParam(':start_date', $start_date);
         $stmt->bindParam(':end_date', $end_date);
         $stmt->bindParam(':amount_paid', $amount_paid);
+        $stmt->bindParam(':created_at', $created_at);
 
         if ($stmt->execute()) {
             return true;

@@ -28,6 +28,10 @@ class CheckInController
             return ['status' => 'error', 'message' => 'Vui lòng nhập tên hoặc số điện thoại.'];
         }
 
+        if (!$memberId && mb_strlen(trim($keyword), 'UTF-8') < 5) {
+            return ['status' => 'error', 'message' => 'Vui lòng nhập tối thiểu 5 ký tự.'];
+        }
+
         $member = null;
 
         if ($memberId) {

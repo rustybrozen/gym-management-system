@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="full_name" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="full_name" name="full_name" value="<?php echo isset($member['full_name']) ? htmlspecialchars($member['full_name']) : ''; ?>" required>
+            <input type="text" class="form-control" id="full_name" name="full_name" value="<?php echo isset($member['full_name']) ? htmlspecialchars($member['full_name']) : ''; ?>" required minlength="5">
         </div>
         <div class="col-md-6 mb-3">
             <label for="phone_number" class="form-label">Số điện thoại <span class="text-danger">*</span></label>

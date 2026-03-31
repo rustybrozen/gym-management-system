@@ -72,7 +72,17 @@ class MemberController
                 $address = $_POST['address'];
                 $healthNotes = $_POST['health_notes'];
 
-                if (!preg_match('/^[0-9]{10,11}$/', $phone)) {
+                if (mb_strlen(trim($fullName), 'UTF-8') < 5) {
+                    $error = "Họ và tên phải từ 5 ký tự trở lên.";
+                    $member = [
+                        'full_name' => $fullName,
+                        'phone_number' => $phone,
+                        'gender' => $gender,
+                        'birth_date' => $birthDate,
+                        'address' => $address,
+                        'health_notes' => $healthNotes
+                    ];
+                } elseif (!preg_match('/^[0-9]{10,11}$/', $phone)) {
                     $error = "Số điện thoại không hợp lệ (phải từ 10-11 số).";
                     $member = [
                         'full_name' => $fullName,
@@ -143,7 +153,15 @@ class MemberController
                 $address = $_POST['address'];
                 $healthNotes = $_POST['health_notes'];
 
-                if (!preg_match('/^[0-9]{10,11}$/', $phone)) {
+                if (mb_strlen(trim($fullName), 'UTF-8') < 5) {
+                    $error = "Họ và tên phải từ 5 ký tự trở lên.";
+                    $member['full_name'] = $fullName;
+                    $member['phone_number'] = $phone;
+                    $member['gender'] = $gender;
+                    $member['birth_date'] = $birthDate;
+                    $member['address'] = $address;
+                    $member['health_notes'] = $healthNotes;
+                } elseif (!preg_match('/^[0-9]{10,11}$/', $phone)) {
                     $error = "Số điện thoại không hợp lệ (phải từ 10-11 số).";
                     $member['full_name'] = $fullName;
                     $member['phone_number'] = $phone;

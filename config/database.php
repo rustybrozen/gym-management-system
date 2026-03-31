@@ -56,7 +56,8 @@ class Database
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 package_name TEXT NOT NULL,
                 duration_days INTEGER NOT NULL,
-                price REAL NOT NULL
+                price REAL NOT NULL,
+                is_deleted INTEGER DEFAULT 0
             );
 
             CREATE TABLE IF NOT EXISTS members (
@@ -104,6 +105,13 @@ class Database
             }
             if (!in_array('created_at', $subColumns)) {
                 $this->conn->exec("ALTER TABLE subscriptions ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
+            }
+
+            // Check if is_deleted column exists in packages table
+            $checkPkgColumn = $this->conn->query("PRAGMA table_info(packages)");
+            $pkgColumns = $checkPkgColumn->fetchAll(PDO::FETCH_COLUMN, 1);
+            if (!in_array('is_deleted', $pkgColumns)) {
+                $this->conn->exec("ALTER TABLE packages ADD COLUMN is_deleted INTEGER DEFAULT 0");
             }
 
             $password = password_hash('123456', PASSWORD_DEFAULT);

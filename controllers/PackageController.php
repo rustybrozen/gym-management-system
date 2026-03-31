@@ -134,10 +134,7 @@ class PackageController
                 exit;
             }
 
-            if ($this->packageModel->isUsedInSubscriptions($id)) {
-                header("Location: index.php?page=packages&error=used_in_subscription");
-                exit;
-            }
+
 
             // Check if package exists
             $package = $this->packageModel->getById($id);

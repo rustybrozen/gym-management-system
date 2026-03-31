@@ -11,7 +11,8 @@
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 package_name TEXT NOT NULL,
                 duration_days INTEGER NOT NULL,
-                price REAL NOT NULL
+                price REAL NOT NULL,
+                is_deleted INTEGER DEFAULT 0
             );
 
             CREATE TABLE IF NOT EXISTS members (

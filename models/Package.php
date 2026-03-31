@@ -12,7 +12,7 @@ class Package
 
     public function getAll()
     {
-        $query = "SELECT * FROM " . $this->table;
+        $query = "SELECT * FROM " . $this->table . " WHERE is_deleted = 0 OR is_deleted IS NULL";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -60,7 +60,7 @@ class Package
 
     public function delete($id)
     {
-        $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+        $query = "UPDATE " . $this->table . " SET is_deleted = 1 WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
 
@@ -82,7 +82,7 @@ class Package
 
     public function getActivePackagesCount()
     {
-        $query = "SELECT COUNT(*) as count FROM " . $this->table;
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE is_deleted = 0 OR is_deleted IS NULL";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch();
@@ -107,7 +107,7 @@ class Package
         }
 
         // Check for duplicate duration
-        $queryDuration = "SELECT id FROM " . $this->table . " WHERE duration_days = :duration" . ($exclude_id ? " AND id != :exclude_id" : "") . " LIMIT 1";
+        $queryDuration = "SELECT id FROM " . $this->table . " WHERE duration_days = :duration AND (is_deleted = 0 OR is_deleted IS NULL)" . ($exclude_id ? " AND id != :exclude_id" : "") . " LIMIT 1";
         $stmtDuration = $this->conn->prepare($queryDuration);
         $stmtDuration->bindParam(':duration', $duration);
         if ($exclude_id) {

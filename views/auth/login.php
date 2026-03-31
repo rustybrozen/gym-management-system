@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin — Gym Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --black: #0a0a0a;
@@ -43,20 +44,16 @@
             position: absolute;
             inset: 0;
             background:
-                repeating-linear-gradient(
-                    0deg,
+                repeating-linear-gradient(0deg,
                     transparent,
                     transparent 79px,
-                    rgba(255,255,255,0.03) 79px,
-                    rgba(255,255,255,0.03) 80px
-                ),
-                repeating-linear-gradient(
-                    90deg,
+                    rgba(255, 255, 255, 0.03) 79px,
+                    rgba(255, 255, 255, 0.03) 80px),
+                repeating-linear-gradient(90deg,
                     transparent,
                     transparent 79px,
-                    rgba(255,255,255,0.03) 79px,
-                    rgba(255,255,255,0.03) 80px
-                );
+                    rgba(255, 255, 255, 0.03) 79px,
+                    rgba(255, 255, 255, 0.03) 80px);
             z-index: 0;
         }
 
@@ -66,7 +63,7 @@
             left: -0.03em;
             font-size: clamp(120px, 16vw, 220px);
             color: transparent;
-            -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
             line-height: 1;
             user-select: none;
             z-index: 1;
@@ -262,11 +259,34 @@
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .panel-left { width: 100%; height: 220px; flex-shrink: 0; }
-            .panel-right { width: 100%; flex: 1; padding: 40px 32px; }
-            .panel-right::before { left: 0; top: 0; right: 0; bottom: auto; width: 100%; height: 4px; }
-            .big-text { font-size: 100px; }
+            body {
+                flex-direction: column;
+            }
+
+            .panel-left {
+                width: 100%;
+                height: 220px;
+                flex-shrink: 0;
+            }
+
+            .panel-right {
+                width: 100%;
+                flex: 1;
+                padding: 40px 32px;
+            }
+
+            .panel-right::before {
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: auto;
+                width: 100%;
+                height: 4px;
+            }
+
+            .big-text {
+                font-size: 100px;
+            }
         }
     </style>
 </head>
@@ -306,27 +326,15 @@
 
                 <div class="mb-form">
                     <label for="username" class="form-label">Tài khoản</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="username"
-                        name="username"
-                        placeholder="Nhập tên đăng nhập"
-                        required
-                        oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '')"
-                    >
+                    <input type="text" class="form-control" id="username" name="username"
+                        placeholder="Nhập tên đăng nhập" required
+                        oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '')">
                 </div>
 
                 <div class="mb-form">
                     <label for="password" class="form-label">Mật khẩu</label>
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        name="password"
-                        placeholder="••••••••"
-                        required
-                    >
+                    <input type="password" class="form-control" id="password" name="password" placeholder="••••••••"
+                        required>
                 </div>
 
                 <button type="submit" class="btn-login">
@@ -334,9 +342,10 @@
                 </button>
             </form>
 
-            <div class="login-footer">© 2025 Ironcore Gym &nbsp;·&nbsp; System Portal</div>
+            <div class="login-footer">© 2026 Ironcore Gym &nbsp;·&nbsp; System Portal</div>
         </div>
     </div>
 
 </body>
+
 </html>

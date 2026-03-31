@@ -55,6 +55,7 @@
             bottom: 0;
             z-index: 100;
             transition: transform 0.3s ease;
+            overflow-y: auto;
         }
 
         /* Brand header */

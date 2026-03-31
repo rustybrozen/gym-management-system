@@ -1,4 +1,4 @@
- CREATE TABLE IF NOT EXISTS admins (
+            CREATE TABLE IF NOT EXISTS admins (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
@@ -7,14 +7,14 @@
                 is_active INTEGER DEFAULT 1
             );
             
-CREATE TABLE IF NOT EXISTS packages (
+            CREATE TABLE IF NOT EXISTS packages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                package_name TEXT NOT NULL UNIQUE,
-                duration_days INTEGER NOT NULL UNIQUE,
+                package_name TEXT NOT NULL,
+                duration_days INTEGER NOT NULL,
                 price REAL NOT NULL
             );
 
-CREATE TABLE IF NOT EXISTS members (
+            CREATE TABLE IF NOT EXISTS members (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 full_name TEXT NOT NULL,
                 phone_number TEXT UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS members (
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
 
-CREATE TABLE IF NOT EXISTS subscriptions (
+            CREATE TABLE IF NOT EXISTS subscriptions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 member_id INTEGER NOT NULL,
                 package_id INTEGER NOT NULL,

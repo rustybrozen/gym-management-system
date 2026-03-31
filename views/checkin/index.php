@@ -26,7 +26,31 @@
     <?php if (isset($result)): ?>
         <div class="mt-2">
 
-            <?php if ($result['status'] === 'success'): ?>
+            <?php if ($result['status'] === 'multiple'): ?>
+                <div class="checkin-result warning" style="border-left-color: #a07800;">
+                    <div class="checkin-status-icon" style="color: #a07800;"><i class="bi bi-people-fill"></i></div>
+                    <div class="checkin-status-label" style="color: #a07800;">NHIỀU KẾT QUẢ</div>
+                    <div class="checkin-divider"></div>
+                    <p class="checkin-msg mb-3">Vui lòng chọn hội viên chính xác:</p>
+                    <div class="checkin-multiple-list">
+                        <?php foreach ($result['members'] as $m): ?>
+                            <form method="POST" action="index.php?page=checkin" style="margin-bottom: 8px;">
+                                <input type="hidden" name="csrf_token" value="<?php echo Csrf::generate(); ?>">
+                                <input type="hidden" name="member_id" value="<?php echo $m['id']; ?>">
+                                <input type="hidden" name="keyword" value="<?php echo htmlspecialchars($result['keyword']); ?>">
+                                <button type="submit" class="gym-input d-flex justify-content-between align-items-center" style="cursor: pointer; text-align: left; padding: 12px 16px;">
+                                    <div>
+                                        <strong style="font-size: 14px; color: var(--black);"><?php echo htmlspecialchars($m['full_name']); ?></strong><br>
+                                        <small style="color: var(--gray-mid); font-size: 12px; font-weight: 500;"><i class="bi bi-telephone"></i> <?php echo htmlspecialchars($m['phone_number']); ?></small>
+                                    </div>
+                                    <span class="act-btn act-view">Chọn</span>
+                                </button>
+                            </form>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+            <?php elseif ($result['status'] === 'success'): ?>
                 <div class="checkin-result valid">
                     <div class="checkin-status-icon"><i class="bi bi-check-circle-fill"></i></div>
                     <div class="checkin-status-label">HỢP LỆ</div>

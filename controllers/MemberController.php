@@ -32,6 +32,7 @@ class MemberController
                 $member['time_left'] = $this->calculateTimeLeft($activeSub['end_date']);
             }
         }
+        unset($member);
 
         $content = 'views/members/index.php';
         include 'views/layout.php';
